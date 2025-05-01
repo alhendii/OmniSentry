@@ -2,7 +2,7 @@ from flask import render_template, request, jsonify, redirect, url_for, flash
 from app import app, db
 from models import Threat
 from threat_detector import scan_log_for_threats
-from ai_analyzer import analyze_log_with_ai, calculate_threat_level
+from nlp_analyzer import analyze_log_content, calculate_threat_level
 import logging
 import html
 
@@ -44,8 +44,9 @@ def upload_log():
     detected_keywords = scan_log_for_threats(log_data)
     
     if detected_keywords:
-        # Calculate threat level
+        # Calculate threat level and perform NLP analysis
         threat_level = calculate_threat_level(detected_keywords, log_data)
+        nlp_analysis = analyze_log_content(log_data, detected_keywords)
         
         # Create new threat
         new_threat = Threat(
@@ -55,18 +56,17 @@ def upload_log():
         )
         new_threat.set_detected_keywords(detected_keywords)
         
-        # Perform AI analysis if keyword detected and OPENAI_API_KEY is configured
-        try:
-            ai_analysis = analyze_log_with_ai(log_data, detected_keywords)
-            if ai_analysis:
-                new_threat.ai_summary = ai_analysis.get('summary')
-                new_threat.set_ai_recommendations(ai_analysis.get('recommendations', []))
-                
-                # Use AI's threat level if available
-                if ai_analysis.get('threat_level'):
-                    new_threat.threat_level = ai_analysis.get('threat_level')
-        except Exception as e:
-            logger.error(f"AI analysis failed: {str(e)}")
+        # Add NLP analysis results
+        if nlp_analysis:
+            new_threat.set_threat_categories(nlp_analysis.get('categories', []))
+            new_threat.set_threat_indicators(nlp_analysis.get('threat_indicators', []))
+            
+            # Use NLP's threat level if available and it's higher than basic level
+            if nlp_analysis.get('severity'):
+                nlp_severity = nlp_analysis.get('severity')
+                if (nlp_severity == 'High' or 
+                    (nlp_severity == 'Medium' and threat_level == 'Low')):
+                    new_threat.threat_level = nlp_severity
         
         # Save to database
         db.session.add(new_threat)
@@ -79,7 +79,7 @@ def upload_log():
                 'details': new_threat.to_dict()
             })
         else:
-            flash(f'Threat detected! The log has been added to the threats list with level: {threat_level}', 'danger')
+            flash(f'Threat detected! The log has been added to the threats list with level: {new_threat.threat_level}', 'danger')
             return redirect(url_for('index'))
     else:
         # No threats found
@@ -140,8 +140,9 @@ def upload_file():
         detected_keywords = scan_log_for_threats(log_data)
         
         if detected_keywords:
-            # Calculate threat level
+            # Calculate threat level and perform NLP analysis
             threat_level = calculate_threat_level(detected_keywords, log_data)
+            nlp_analysis = analyze_log_content(log_data, detected_keywords)
             
             # Create new threat
             new_threat = Threat(
@@ -151,24 +152,23 @@ def upload_file():
             )
             new_threat.set_detected_keywords(detected_keywords)
             
-            # Perform AI analysis
-            try:
-                ai_analysis = analyze_log_with_ai(log_data, detected_keywords)
-                if ai_analysis:
-                    new_threat.ai_summary = ai_analysis.get('summary')
-                    new_threat.set_ai_recommendations(ai_analysis.get('recommendations', []))
-                    
-                    # Use AI's threat level if available
-                    if ai_analysis.get('threat_level'):
-                        new_threat.threat_level = ai_analysis.get('threat_level')
-            except Exception as e:
-                logger.error(f"AI analysis failed: {str(e)}")
+            # Add NLP analysis results
+            if nlp_analysis:
+                new_threat.set_threat_categories(nlp_analysis.get('categories', []))
+                new_threat.set_threat_indicators(nlp_analysis.get('threat_indicators', []))
+                
+                # Use NLP's threat level if available and it's higher than basic level
+                if nlp_analysis.get('severity'):
+                    nlp_severity = nlp_analysis.get('severity')
+                    if (nlp_severity == 'High' or 
+                        (nlp_severity == 'Medium' and threat_level == 'Low')):
+                        new_threat.threat_level = nlp_severity
             
             # Save to database
             db.session.add(new_threat)
             db.session.commit()
             
-            flash(f'Threat detected in file! The log has been added with level: {threat_level}', 'danger')
+            flash(f'Threat detected in file! The log has been added with level: {new_threat.threat_level}', 'danger')
         else:
             flash('File analyzed - No threats detected.', 'success')
         
@@ -179,17 +179,32 @@ def filter_threats():
     """Filter threats by level or keyword"""
     level = request.args.get('level')
     keyword = request.args.get('keyword')
+    category = request.args.get('category')
     
     query = Threat.query
     
     if level and level != 'All':
         query = query.filter(Threat.threat_level == level)
+    
+    threats = query.order_by(Threat.timestamp.desc()).all()
+    
+    if category and category != 'All':
+        # Filter by threat category
+        filtered_threats = []
+        for threat in threats:
+            if category.lower() in [cat.lower() for cat in threat.get_threat_categories()]:
+                filtered_threats.append(threat)
+        return render_template('index.html', threats=filtered_threats, filter_active=True)
         
     if keyword:
         # This is a simple implementation - for production, consider a more efficient solution
-        threats = query.all()
-        filtered_threats = [t for t in threats if keyword.lower() in t.get_detected_keywords() or keyword.lower() in t.raw_log.lower()]
+        filtered_threats = []
+        for threat in threats:
+            # Check in keywords, log content, and indicators
+            if (keyword.lower() in [kw.lower() for kw in threat.get_detected_keywords()] or 
+                keyword.lower() in threat.raw_log.lower() or
+                any(keyword.lower() in indicator.lower() for indicator in threat.get_threat_indicators())):
+                filtered_threats.append(threat)
         return render_template('index.html', threats=filtered_threats, filter_active=True)
     
-    threats = query.order_by(Threat.timestamp.desc()).all()
     return render_template('index.html', threats=threats, filter_active=True)

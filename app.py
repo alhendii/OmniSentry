@@ -34,10 +34,11 @@ with app.app_context():
     # Import models to ensure tables are created
     import models
     
-    # Create all tables
+    # Drop all tables and recreate them
+    db.drop_all()
     db.create_all()
     
-    logger.info("Database tables created")
+    logger.info("Database tables recreated")
 
 # Import routes after initializing app and database
 from routes import *
