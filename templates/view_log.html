@@ -17,10 +17,14 @@
 <div class="row">
     <div class="col-12">
         <div class="card bg-dark text-light shadow-sm mb-4">
-            <div class="card-header bg-danger">
+            <div class="card-header {% if threat.threat_level == 'High' %}bg-danger{% elif threat.threat_level == 'Medium' %}bg-warning bg-opacity-75{% else %}bg-info bg-opacity-75{% endif %}">
                 <div class="d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">
-                        <i class="fas fa-exclamation-triangle me-2"></i> Threat Details #{{ threat.id }}
+                        <i class="fas fa-exclamation-triangle me-2"></i> 
+                        Threat Details #{{ threat.id }} 
+                        <span class="badge {% if threat.threat_level == 'High' %}bg-danger{% elif threat.threat_level == 'Medium' %}bg-warning text-dark{% else %}bg-info{% endif %} ms-2">
+                            {{ threat.threat_level }} Severity
+                        </span>
                     </h5>
                     <a href="{{ url_for('index') }}" class="btn btn-outline-light btn-sm">
                         <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
@@ -28,47 +32,192 @@
                 </div>
             </div>
             <div class="card-body">
-                <div class="row mb-4">
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <h6 class="text-secondary">Threat ID</h6>
-                            <p class="lead">#{{ threat.id }}</p>
-                        </div>
-                        <div class="mb-3">
-                            <h6 class="text-secondary">Detection Timestamp</h6>
-                            <p class="lead">{{ threat.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</p>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <h6 class="text-secondary">Detected Keywords</h6>
-                            <div>
-                                {% for keyword in threat.detected_keywords %}
-                                <span class="badge bg-danger me-1 mb-1">{{ keyword }}</span>
-                                {% endfor %}
+                <div class="row">
+                    <div class="col-lg-8">
+                        <!-- Threat Analysis Tab -->
+                        <nav>
+                            <div class="nav nav-tabs mb-3" id="nav-tab" role="tablist">
+                                <button class="nav-link active" id="nav-details-tab" data-bs-toggle="tab" data-bs-target="#nav-details" type="button" role="tab">
+                                    <i class="fas fa-info-circle me-1"></i> Threat Details
+                                </button>
+                                <button class="nav-link" id="nav-log-tab" data-bs-toggle="tab" data-bs-target="#nav-log" type="button" role="tab">
+                                    <i class="fas fa-file-alt me-1"></i> Raw Log
+                                </button>
+                            </div>
+                        </nav>
+                        <div class="tab-content" id="nav-tabContent">
+                            <div class="tab-pane fade show active" id="nav-details" role="tabpanel" aria-labelledby="nav-details-tab">
+                                <div class="row mb-4">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <h6 class="text-secondary">Threat ID</h6>
+                                            <p class="lead">#{{ threat.id }}</p>
+                                        </div>
+                                        <div class="mb-3">
+                                            <h6 class="text-secondary">Detection Timestamp</h6>
+                                            <p class="lead">{{ threat.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+                                        </div>
+                                        <div class="mb-3">
+                                            <h6 class="text-secondary">Source</h6>
+                                            <p>{{ threat.source }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <h6 class="text-secondary">Threat Level</h6>
+                                            <div class="badge {% if threat.threat_level == 'High' %}bg-danger{% elif threat.threat_level == 'Medium' %}bg-warning text-dark{% else %}bg-info{% endif %} fs-6">
+                                                {{ threat.threat_level }}
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <h6 class="text-secondary">Detected Keywords</h6>
+                                            <div>
+                                                {% for keyword in threat.get_detected_keywords() %}
+                                                <span class="badge bg-secondary me-1 mb-1">{{ keyword }}</span>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- AI Analysis Section -->
+                                {% if threat.ai_summary %}
+                                <div class="card bg-dark border border-info mb-3">
+                                    <div class="card-header bg-info bg-opacity-25">
+                                        <i class="fas fa-robot me-2"></i> AI Analysis
+                                    </div>
+                                    <div class="card-body">
+                                        <h6 class="card-subtitle mb-3 text-muted">Threat Summary</h6>
+                                        <p>{{ threat.ai_summary }}</p>
+                                        
+                                        {% if threat.get_ai_recommendations() %}
+                                        <h6 class="card-subtitle mb-2 text-muted mt-3">Recommended Actions</h6>
+                                        <ul class="list-group list-group-flush">
+                                            {% for recommendation in threat.get_ai_recommendations() %}
+                                            <li class="list-group-item bg-dark text-light border-secondary">
+                                                <i class="fas fa-check-circle text-info me-2"></i> {{ recommendation }}
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="tab-pane fade" id="nav-log" role="tabpanel" aria-labelledby="nav-log-tab">
+                                <h5 class="mb-3"><i class="fas fa-file-alt me-2"></i> Raw Log Data</h5>
+                                <div class="alert alert-dark">
+                                    <pre class="mb-0 log-content"><code>{{ threat.raw_log }}</code></pre>
+                                </div>
                             </div>
                         </div>
-                        <div class="mb-3">
-                            <h6 class="text-secondary">Severity</h6>
-                            <div class="badge bg-danger">High</div>
+                    </div>
+                    
+                    <div class="col-lg-4">
+                        <!-- Security advisory -->
+                        <div class="card bg-dark border border-warning mb-4">
+                            <div class="card-header bg-warning bg-opacity-25">
+                                <i class="fas fa-exclamation-circle me-2"></i> Security Advisory
+                            </div>
+                            <div class="card-body">
+                                <p>This log contains patterns that match known malicious activities. Please review the log carefully and take appropriate action if needed.</p>
+                                
+                                <div class="alert alert-secondary">
+                                    <strong>Possible Impact:</strong>
+                                    <ul class="mb-0 mt-2">
+                                        {% if 'powershell' in threat.raw_log.lower() or 'cmd.exe' in threat.raw_log.lower() %}
+                                        <li>Command execution</li>
+                                        {% endif %}
+                                        
+                                        {% if 'credential' in threat.raw_log.lower() or 'password' in threat.raw_log.lower() or 'mimikatz' in threat.raw_log.lower() %}
+                                        <li>Credential theft</li>
+                                        {% endif %}
+                                        
+                                        {% if 'backdoor' in threat.raw_log.lower() or 'reverse shell' in threat.raw_log.lower() %}
+                                        <li>Persistent access</li>
+                                        {% endif %}
+                                        
+                                        {% if 'escalation' in threat.raw_log.lower() or 'privilege' in threat.raw_log.lower() %}
+                                        <li>Privilege escalation</li>
+                                        {% endif %}
+                                        
+                                        {% if 'download' in threat.raw_log.lower() or 'http' in threat.raw_log.lower() %}
+                                        <li>Malware download</li>
+                                        {% endif %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- MITRE ATT&CK mappings (simplified) -->
+                        <div class="card bg-dark border border-secondary">
+                            <div class="card-header">
+                                <i class="fas fa-sitemap me-2"></i> Potential Tactics
+                            </div>
+                            <div class="card-body p-0">
+                                <ul class="list-group list-group-flush">
+                                    {% if 'powershell' in threat.raw_log.lower() or 'cmd.exe' in threat.raw_log.lower() or 'rundll32' in threat.raw_log.lower() %}
+                                    <li class="list-group-item bg-dark text-light border-secondary d-flex justify-content-between align-items-center">
+                                        Execution
+                                        <span class="badge bg-secondary rounded-pill">T1059</span>
+                                    </li>
+                                    {% endif %}
+                                    
+                                    {% if 'credential' in threat.raw_log.lower() or 'password' in threat.raw_log.lower() or 'mimikatz' in threat.raw_log.lower() %}
+                                    <li class="list-group-item bg-dark text-light border-secondary d-flex justify-content-between align-items-center">
+                                        Credential Access
+                                        <span class="badge bg-secondary rounded-pill">T1003</span>
+                                    </li>
+                                    {% endif %}
+                                    
+                                    {% if 'escalation' in threat.raw_log.lower() or 'privilege' in threat.raw_log.lower() %}
+                                    <li class="list-group-item bg-dark text-light border-secondary d-flex justify-content-between align-items-center">
+                                        Privilege Escalation
+                                        <span class="badge bg-secondary rounded-pill">T1068</span>
+                                    </li>
+                                    {% endif %}
+                                    
+                                    {% if 'registry' in threat.raw_log.lower() or 'startup' in threat.raw_log.lower() %}
+                                    <li class="list-group-item bg-dark text-light border-secondary d-flex justify-content-between align-items-center">
+                                        Persistence
+                                        <span class="badge bg-secondary rounded-pill">T1547</span>
+                                    </li>
+                                    {% endif %}
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                </div>
-                
-                <hr class="my-4">
-                
-                <h5 class="mb-3"><i class="fas fa-file-alt me-2"></i> Raw Log Data</h5>
-                <div class="alert alert-dark">
-                    <pre class="mb-0"><code>{{ threat.raw_log }}</code></pre>
-                </div>
-                
-                <div class="alert alert-warning mt-4">
-                    <i class="fas fa-exclamation-circle me-2"></i>
-                    <strong>Security Advisory:</strong> This log contains patterns that match known malicious activities. 
-                    Please review the log carefully and take appropriate action if needed.
                 </div>
             </div>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Highlight keywords in the log content
+        const logContent = document.querySelector('.log-content');
+        if (logContent) {
+            const keywords = [
+                {% for keyword in threat.get_detected_keywords() %}
+                "{{ keyword }}",
+                {% endfor %}
+            ];
+            
+            let content = logContent.innerHTML;
+            
+            keywords.forEach(keyword => {
+                // Case insensitive replacement with highlighting
+                const regex = new RegExp(keyword, 'gi');
+                content = content.replace(regex, match => 
+                    `<span class="text-danger fw-bold">${match}</span>`
+                );
+            });
+            
+            logContent.innerHTML = content;
+        }
+    });
+</script>
 {% endblock %}

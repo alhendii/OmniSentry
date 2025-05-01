@@ -8,7 +8,7 @@
         <div class="card bg-dark text-light shadow-sm mb-4">
             <div class="card-header bg-danger bg-opacity-25 d-flex justify-content-between align-items-center">
                 <h5 class="mb-0">
-                    <i class="fas fa-shield-alt me-2"></i> Endpoint Threat Detection
+                    <i class="fas fa-shield-alt me-2"></i> ThreatWatch Lite Dashboard
                 </h5>
                 <span class="badge bg-danger" id="threat-count">
                     {{ threats|length }} Detected Threats
@@ -17,39 +17,126 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-8">
-                        <h3 class="fw-bold mb-3">Submit Log for Analysis</h3>
-                        <form action="{{ url_for('upload_log') }}" method="POST">
-                            <div class="mb-3">
-                                <label for="log_data" class="form-label">Log Data</label>
-                                <textarea class="form-control" id="log_data" name="log_data" rows="6" 
-                                    placeholder="Paste log data here for threat analysis..." required></textarea>
+                        <ul class="nav nav-tabs mb-3" id="uploadTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="paste-log-tab" data-bs-toggle="tab" data-bs-target="#paste-log" type="button" role="tab" aria-controls="paste-log" aria-selected="true">
+                                    <i class="fas fa-paste me-1"></i> Paste Log
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="upload-file-tab" data-bs-toggle="tab" data-bs-target="#upload-file" type="button" role="tab" aria-controls="upload-file" aria-selected="false">
+                                    <i class="fas fa-file-upload me-1"></i> Upload File
+                                </button>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="uploadTabsContent">
+                            <div class="tab-pane fade show active" id="paste-log" role="tabpanel" aria-labelledby="paste-log-tab">
+                                <form action="{{ url_for('upload_log') }}" method="POST">
+                                    <div class="mb-3">
+                                        <label for="log_data" class="form-label">Log Data</label>
+                                        <textarea class="form-control" id="log_data" name="log_data" rows="6" 
+                                            placeholder="Paste log data here for threat analysis..." required></textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn-danger">
+                                        <i class="fas fa-search me-2"></i> Scan for Threats
+                                    </button>
+                                </form>
                             </div>
-                            <button type="submit" class="btn btn-danger">
-                                <i class="fas fa-search me-2"></i> Scan for Threats
-                            </button>
-                        </form>
+                            <div class="tab-pane fade" id="upload-file" role="tabpanel" aria-labelledby="upload-file-tab">
+                                <form action="{{ url_for('upload_file') }}" method="POST" enctype="multipart/form-data">
+                                    <div class="mb-3">
+                                        <label for="log_file" class="form-label">Log File</label>
+                                        <input type="file" class="form-control" id="log_file" name="log_file" accept=".log,.txt,.json" required>
+                                        <div class="form-text text-light">
+                                            Accepted formats: .log, .txt, .json
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-danger">
+                                        <i class="fas fa-file-upload me-2"></i> Upload and Scan
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="card bg-dark border border-secondary">
-                            <div class="card-header">Quick Stats</div>
+                        <div class="card bg-dark border border-secondary mb-3">
+                            <div class="card-header">
+                                <i class="fas fa-chart-pie me-1"></i> Quick Stats
+                            </div>
                             <div class="card-body">
                                 <div class="d-flex justify-content-between mb-2">
                                     <span>Total Threats:</span>
                                     <span class="badge bg-danger">{{ threats|length }}</span>
                                 </div>
                                 <div class="d-flex justify-content-between mb-2">
+                                    <span>High Severity:</span>
+                                    <span class="badge bg-danger">{{ threats|selectattr('threat_level', 'equalto', 'High')|list|length }}</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Medium Severity:</span>
+                                    <span class="badge bg-warning text-dark">{{ threats|selectattr('threat_level', 'equalto', 'Medium')|list|length }}</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Low Severity:</span>
+                                    <span class="badge bg-info">{{ threats|selectattr('threat_level', 'equalto', 'Low')|list|length }}</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2">
                                     <span>Status:</span>
                                     <span class="badge bg-success">Active</span>
                                 </div>
-                                <hr>
+                            </div>
+                        </div>
+                        <div class="card bg-dark border border-secondary">
+                            <div class="card-header">
+                                <i class="fas fa-robot me-1"></i> Smart Assistant
+                            </div>
+                            <div class="card-body">
                                 <div class="alert alert-info mb-0">
                                     <i class="fas fa-info-circle me-2"></i>
-                                    Scanning for {{ known_threat_count|default(30) }} known threats
+                                    <span id="assistant-message">
+                                        AI-powered analysis is active. Submit logs to get intelligent threat insights.
+                                    </span>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card bg-dark text-light shadow-sm">
+            <div class="card-header bg-secondary bg-opacity-25">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-filter me-2"></i> Filter Threats
+                    </h5>
+                </div>
+            </div>
+            <div class="card-body">
+                <form action="{{ url_for('filter_threats') }}" method="GET" class="row g-3">
+                    <div class="col-md-4">
+                        <label for="level" class="form-label">Threat Level</label>
+                        <select class="form-select" id="level" name="level">
+                            <option value="All" selected>All Levels</option>
+                            <option value="High">High</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Low">Low</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="keyword" class="form-label">Keyword Search</label>
+                        <input type="text" class="form-control" id="keyword" name="keyword" placeholder="Search for keywords or log content...">
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-search me-2"></i> Filter
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -71,7 +158,9 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Timestamp</th>
+                                <th>Threat Level</th>
                                 <th>Detected Keywords</th>
+                                <th>Source</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -81,13 +170,25 @@
                                 <td>#{{ threat.id }}</td>
                                 <td>{{ threat.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
                                 <td>
-                                    {% for keyword in threat.detected_keywords %}
-                                    <span class="badge bg-danger me-1">{{ keyword }}</span>
+                                    {% if threat.threat_level == 'High' %}
+                                    <span class="badge bg-danger">High</span>
+                                    {% elif threat.threat_level == 'Medium' %}
+                                    <span class="badge bg-warning text-dark">Medium</span>
+                                    {% else %}
+                                    <span class="badge bg-info">Low</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% for keyword in threat.get_detected_keywords() %}
+                                    <span class="badge bg-secondary me-1 mb-1">{{ keyword }}</span>
                                     {% endfor %}
                                 </td>
                                 <td>
+                                    <small class="text-muted">{{ threat.source }}</small>
+                                </td>
+                                <td>
                                     <a href="{{ url_for('view_log', threat_id=threat.id) }}" class="btn btn-sm btn-info">
-                                        <i class="fas fa-eye"></i> View Full Log
+                                        <i class="fas fa-eye"></i> View Details
                                     </a>
                                 </td>
                             </tr>
@@ -128,7 +229,7 @@
                             <tr>
                                 <td><code>/upload</code></td>
                                 <td><span class="badge bg-primary">POST</span></td>
-                                <td>Upload log data in JSON format <code>{"log": "log data here"}</code></td>
+                                <td>Upload log data in JSON format <code>{"log": "log data here", "source": "endpoint_name"}</code></td>
                             </tr>
                             <tr>
                                 <td><code>/api/threats</code></td>
@@ -139,6 +240,11 @@
                                 <td><code>/api/threat/:id</code></td>
                                 <td><span class="badge bg-success">GET</span></td>
                                 <td>View detailed information about a specific threat</td>
+                            </tr>
+                            <tr>
+                                <td><code>/filter_threats</code></td>
+                                <td><span class="badge bg-success">GET</span></td>
+                                <td>Filter threats by level or keyword <code>?level=High&keyword=powershell</code></td>
                             </tr>
                         </tbody>
                     </table>
@@ -154,6 +260,26 @@
     // Highlight new threats automatically on page load
     document.addEventListener('DOMContentLoaded', function() {
         // The CSS will handle the animation
+        
+        // Keep selected tab active after form submission
+        const urlParams = new URLSearchParams(window.location.search);
+        const filterActive = {{ 'true' if filter_active else 'false' }};
+        
+        if (urlParams.has('level') || urlParams.has('keyword') || filterActive) {
+            // Highlight that filters are active
+            document.getElementById('level').value = urlParams.get('level') || 'All';
+            document.getElementById('keyword').value = urlParams.get('keyword') || '';
+        }
+        
+        // Smart assistant messages
+        const threats = {{ threats|length }};
+        const assistantMessage = document.getElementById('assistant-message');
+        
+        if (threats > 5) {
+            assistantMessage.innerHTML = 'Your system shows multiple threats. Consider reviewing the highest severity items first.';
+        } else if (threats > 0) {
+            assistantMessage.innerHTML = 'Detected threat patterns. Check the threat details for AI-powered analysis and recommendations.';
+        }
     });
 </script>
 {% endblock %}
