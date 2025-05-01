@@ -1,84 +1,136 @@
+
 /* ThreatWatch Lite - Custom CSS */
+
+:root {
+  --background: 240 10% 3.9%;
+  --foreground: 0 0% 98%;
+  --card: 240 10% 3.9%;
+  --card-foreground: 0 0% 98%;
+  --primary: 0 0% 98%;
+  --primary-foreground: 240 5.9% 10%;
+  --secondary: 240 3.7% 15.9%;
+  --secondary-foreground: 0 0% 98%;
+  --muted: 240 3.7% 15.9%;
+  --muted-foreground: 240 5% 64.9%;
+  --accent: 240 3.7% 15.9%;
+  --accent-foreground: 0 0% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 240 3.7% 15.9%;
+  --input: 240 3.7% 15.9%;
+  --ring: 240 4.9% 83.9%;
+  --radius: 0.5rem;
+}
+
+body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
 
 /* Threat row highlighting animation */
 @keyframes highlight {
-    0% { background-color: rgba(220, 53, 69, 0.25); }
-    100% { background-color: transparent; }
+  0% { background-color: rgba(220, 53, 69, 0.25); }
+  100% { background-color: transparent; }
 }
 
 .new-threat {
-    animation: highlight 4s ease-out;
+  animation: highlight 4s ease-out;
 }
 
 /* Log code styling */
 pre code {
-    display: block;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    background-color: #212529;
-    padding: 10px;
-    border-radius: 5px;
-    max-height: 500px;
-    overflow-y: auto;
+  display: block;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  background-color: hsl(var(--muted));
+  padding: 1rem;
+  border-radius: var(--radius);
+  max-height: 500px;
+  overflow-y: auto;
+  font-size: 0.875rem;
+  font-family: monospace;
+}
+
+/* Custom scrollbar for code blocks */
+pre code::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+pre code::-webkit-scrollbar-thumb {
+  background-color: hsla(var(--muted-foreground), 0.3);
+  border-radius: 9999px;
+}
+
+pre code::-webkit-scrollbar-track {
+  background-color: transparent;
 }
 
 /* Improved table styling */
 .table-responsive {
-    border-radius: 5px;
-    overflow: hidden;
+  border-radius: var(--radius);
+  overflow: hidden;
 }
 
 /* Custom badge for threat keywords */
 .badge {
-    font-size: 0.8rem;
-    font-weight: normal;
-    padding: 0.35em 0.65em;
+  font-size: 0.8rem;
+  font-weight: normal;
+  padding: 0.35em 0.65em;
+  border-radius: calc(var(--radius) * 0.75);
 }
 
 /* Dashboard cards */
 .card {
-    border-radius: 8px;
-    overflow: hidden;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background-color: hsl(var(--card));
+  color: hsl(var(--card-foreground));
+  border: 1px solid hsl(var(--border));
 }
 
 .card-header {
-    font-weight: 600;
+  font-weight: 600;
+  padding: 1rem;
+  border-bottom: 1px solid hsl(var(--border));
 }
 
 /* Navigation tweaks */
 .navbar-brand {
-    font-weight: bold;
-    font-size: 1.4rem;
+  font-weight: bold;
+  font-size: 1.4rem;
 }
 
 /* Form customization */
 textarea.form-control {
-    font-family: monospace;
-    resize: vertical;
+  font-family: monospace;
+  resize: vertical;
+  background-color: hsl(var(--input));
+  border-color: hsl(var(--border));
+  border-radius: var(--radius);
 }
 
 /* Footer positioning */
-body {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
-
 .container {
-    flex: 1;
+  flex: 1;
 }
 
 footer {
-    margin-top: auto;
+  margin-top: auto;
+  background-color: hsl(var(--muted));
+  color: hsl(var(--muted-foreground));
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-    .card-title {
-        font-size: 1.2rem;
-    }
-    
-    .table th, .table td {
-        font-size: 0.9rem;
-    }
+  .card-title {
+    font-size: 1.2rem;
+  }
+  
+  .table th, .table td {
+    font-size: 0.9rem;
+  }
 }
