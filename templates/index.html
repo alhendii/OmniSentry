@@ -118,7 +118,7 @@
             </div>
             <div class="card-body">
                 <form action="{{ url_for('filter_threats') }}" method="GET" class="row g-3">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label for="level" class="form-label">Threat Level</label>
                         <select class="form-select" id="level" name="level">
                             <option value="All" selected>All Levels</option>
@@ -127,9 +127,23 @@
                             <option value="Low">Low</option>
                         </select>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-3">
+                        <label for="category" class="form-label">Threat Category</label>
+                        <select class="form-select" id="category" name="category">
+                            <option value="All" selected>All Categories</option>
+                            <option value="command_execution">Command Execution</option>
+                            <option value="credential_theft">Credential Theft</option>
+                            <option value="privilege_escalation">Privilege Escalation</option>
+                            <option value="persistence">Persistence</option>
+                            <option value="remote_access">Remote Access</option>
+                            <option value="malware_indicators">Malware</option>
+                            <option value="network_activity">Network Activity</option>
+                            <option value="suspicious_activity">Suspicious Activity</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
                         <label for="keyword" class="form-label">Keyword Search</label>
-                        <input type="text" class="form-control" id="keyword" name="keyword" placeholder="Search for keywords or log content...">
+                        <input type="text" class="form-control" id="keyword" name="keyword" placeholder="Search for keywords or indicators...">
                     </div>
                     <div class="col-md-2 d-flex align-items-end">
                         <button type="submit" class="btn btn-primary w-100">
@@ -159,6 +173,7 @@
                                 <th>ID</th>
                                 <th>Timestamp</th>
                                 <th>Threat Level</th>
+                                <th>Categories</th>
                                 <th>Detected Keywords</th>
                                 <th>Source</th>
                                 <th>Actions</th>
@@ -176,6 +191,15 @@
                                     <span class="badge bg-warning text-dark">Medium</span>
                                     {% else %}
                                     <span class="badge bg-info">Low</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if threat.get_threat_categories() %}
+                                        {% for category in threat.get_threat_categories() %}
+                                        <span class="badge bg-dark text-light border border-info me-1 mb-1">{{ category|replace('_', ' ')|title }}</span>
+                                        {% endfor %}
+                                    {% else %}
+                                        <small class="text-muted">Uncategorized</small>
                                     {% endif %}
                                 </td>
                                 <td>
@@ -265,10 +289,13 @@
         const urlParams = new URLSearchParams(window.location.search);
         const filterActive = {{ 'true' if filter_active else 'false' }};
         
-        if (urlParams.has('level') || urlParams.has('keyword') || filterActive) {
+        if (urlParams.has('level') || urlParams.has('keyword') || urlParams.has('category') || filterActive) {
             // Highlight that filters are active
             document.getElementById('level').value = urlParams.get('level') || 'All';
             document.getElementById('keyword').value = urlParams.get('keyword') || '';
+            if (urlParams.has('category')) {
+                document.getElementById('category').value = urlParams.get('category');
+            }
         }
         
         // Smart assistant messages
@@ -278,7 +305,7 @@
         if (threats > 5) {
             assistantMessage.innerHTML = 'Your system shows multiple threats. Consider reviewing the highest severity items first.';
         } else if (threats > 0) {
-            assistantMessage.innerHTML = 'Detected threat patterns. Check the threat details for AI-powered analysis and recommendations.';
+            assistantMessage.innerHTML = 'Detected threat patterns. Check the details for NLP-based analysis of security indicators.';
         }
     });
 </script>
