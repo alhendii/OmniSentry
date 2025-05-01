@@ -1,43 +1,5 @@
 /* ThreatWatch Lite - Custom CSS */
 
-:root {
-    /* Color palette as per the minimalist design */
-    --primary-text: #ffffff;
-    --secondary-text: #adb5bd;
-    --muted-text: #6c757d;
-    --background-dark: #212529;
-    --background-light: #2c3034;
-    --border-color: #495057;
-    
-    /* Semantic colors */
-    --threat-high: hsl(0, 84.2%, 60.2%); /* Red for critical threats */
-    --threat-medium: hsl(38, 92%, 50%); /* Amber for warnings */
-    --threat-low: hsl(142, 76%, 36%); /* Green for low severity */
-    --info-color: #0dcaf0;
-}
-
-/* Global theme overrides for cleaner look */
-body {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    color: var(--primary-text);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, 
-                "Helvetica Neue", Arial, sans-serif;
-}
-
-/* Navbar styling */
-.navbar {
-    background-color: var(--background-dark) !important;
-    border-bottom: 1px solid var(--border-color);
-}
-
-.navbar-brand {
-    font-weight: bold;
-    font-size: 1.4rem;
-    color: var(--primary-text) !important;
-}
-
 /* Threat row highlighting animation */
 @keyframes highlight {
     0% { background-color: rgba(220, 53, 69, 0.25); }
@@ -48,169 +10,66 @@ body {
     animation: highlight 4s ease-out;
 }
 
-/* Card styling for minimalist look */
-.card {
-    border-radius: 8px;
+/* Log code styling */
+pre code {
+    display: block;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    background-color: #212529;
+    padding: 10px;
+    border-radius: 5px;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+/* Improved table styling */
+.table-responsive {
+    border-radius: 5px;
     overflow: hidden;
-    background-color: var(--background-light) !important;
-    border: 1px solid var(--border-color) !important;
 }
 
-.card-header {
-    font-weight: 600;
-    background-color: var(--background-dark) !important;
-    border-bottom: 1px solid var(--border-color) !important;
-}
-
-/* Badge styling for categories and threat levels */
+/* Custom badge for threat keywords */
 .badge {
     font-size: 0.8rem;
     font-weight: normal;
     padding: 0.35em 0.65em;
 }
 
-/* Threat level color coding */
-.badge-high {
-    background-color: var(--threat-high) !important;
-    color: white !important;
-}
-
-.badge-medium {
-    background-color: var(--threat-medium) !important;
-    color: black !important;
-}
-
-.badge-low {
-    background-color: var(--threat-low) !important;
-    color: white !important;
-}
-
-/* Category badges - more subtle */
-.category-badge {
-    background-color: transparent !important;
-    border: 1px solid var(--info-color) !important;
-    color: var(--info-color) !important;
-}
-
-/* Table styling */
-.table {
-    color: var(--primary-text) !important;
-}
-
-.table-dark {
-    background-color: var(--background-light) !important;
-}
-
-.table-responsive {
-    border-radius: 5px;
+/* Dashboard cards */
+.card {
+    border-radius: 8px;
     overflow: hidden;
 }
 
-.table th {
+.card-header {
     font-weight: 600;
-    color: var(--secondary-text);
 }
 
-/* Log code styling with minimalist design */
-pre code {
-    display: block;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    background-color: var(--background-dark);
-    padding: 10px;
-    border-radius: 5px;
-    max-height: 500px;
-    overflow-y: auto;
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, 
-                Consolas, "Liberation Mono", "Courier New", monospace;
-    font-size: 0.9rem;
-    line-height: 1.5;
+/* Navigation tweaks */
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.4rem;
 }
 
 /* Form customization */
-textarea.form-control, 
-.form-control {
-    background-color: var(--background-dark) !important;
-    border: 1px solid var(--border-color) !important;
-    color: var(--primary-text) !important;
-}
-
 textarea.form-control {
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, 
-                Consolas, "Liberation Mono", "Courier New", monospace;
+    font-family: monospace;
     resize: vertical;
 }
 
-/* Footer styling */
+/* Footer positioning */
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
 .container {
     flex: 1;
 }
 
 footer {
     margin-top: auto;
-    background-color: var(--background-dark) !important;
-    border-top: 1px solid var(--border-color);
-}
-
-/* Alert styling for better contrast */
-.alert {
-    border-radius: 8px;
-}
-
-.alert-info {
-    background-color: rgba(13, 202, 240, 0.15) !important;
-    border-color: rgba(13, 202, 240, 0.4) !important;
-    color: var(--info-color) !important;
-}
-
-.alert-danger {
-    background-color: rgba(220, 53, 69, 0.15) !important;
-    border-color: rgba(220, 53, 69, 0.4) !important;
-    color: var(--threat-high) !important;
-}
-
-.alert-success {
-    background-color: rgba(25, 135, 84, 0.15) !important;
-    border-color: rgba(25, 135, 84, 0.4) !important;
-    color: var(--threat-low) !important;
-}
-
-.alert-warning {
-    background-color: rgba(255, 193, 7, 0.15) !important;
-    border-color: rgba(255, 193, 7, 0.4) !important;
-    color: var(--threat-medium) !important;
-}
-
-/* Button styling */
-.btn-primary {
-    background-color: #0d6efd !important;
-    border-color: #0d6efd !important;
-}
-
-.btn-info {
-    background-color: var(--info-color) !important;
-    border-color: var(--info-color) !important;
-    color: black !important;
-}
-
-.btn-danger {
-    background-color: var(--threat-high) !important;
-    border-color: var(--threat-high) !important;
-}
-
-/* Tab navigation */
-.nav-tabs {
-    border-bottom: 1px solid var(--border-color) !important;
-}
-
-.nav-tabs .nav-link.active {
-    background-color: var(--background-light) !important;
-    border-color: var(--border-color) !important;
-    color: var(--primary-text) !important;
-}
-
-.nav-tabs .nav-link {
-    color: var(--secondary-text) !important;
 }
 
 /* Responsive adjustments */
