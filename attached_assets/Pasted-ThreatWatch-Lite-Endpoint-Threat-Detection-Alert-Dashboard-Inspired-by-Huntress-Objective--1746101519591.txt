@@ -1,0 +1,83 @@
+ThreatWatch Lite – Endpoint Threat Detection & Alert Dashboard (Inspired by Huntress)
+
+🎯 Objective:
+Develop a simple cybersecurity dashboard that simulates a threat detection system for small businesses or IT teams. The app should:
+
+Accept uploaded logs from endpoints or user agents
+
+Detect known threat patterns
+
+Store flagged threats
+
+Display alerts on a clean web dashboard
+
+🧩 Core Functional Features (Backend)
+1. /upload — Upload Log Data (POST)
+Accepts raw text input or logs in JSON body: { "log": "some log data here" }
+
+Scans for known malicious patterns using keywords (e.g., "powershell", "mimikatz", "rundll32")
+
+If a threat is found, store it as an alert with:
+
+Timestamp
+
+Detected keywords
+
+Raw log data
+
+Unique threat ID
+
+Return a JSON response:
+
+If threats are found: {"status": "threat_detected", "details": {...}}
+
+If clean: {"status": "clean", "message": "No threats found."}
+
+2. /api/threats — Get All Detected Threats (GET)
+Returns a list of all stored threat alerts in JSON format
+
+3. / — Main Dashboard (GET)
+Renders an HTML template showing a table or list of all detected threats
+
+Each entry includes:
+
+Date/time
+
+Keywords triggered
+
+Option to view full log
+
+🎨 Frontend UI (HTML + Tailwind or Bootstrap)
+Input form for submitting logs manually
+
+Display panel for existing threats
+
+Basic filters by keyword or time (optional for V2)
+
+Visual cue (e.g., red icon) for threats detected
+
+🔐 Security & Logging Suggestions
+Sanitize input to prevent XSS or injection
+
+Log all uploads and alerts internally
+
+Optionally hash raw logs for integrity
+
+🧠 Future Feature Ideas (Optional, Stretch Goals)
+Email notifications on new threat detection (SMTP or SendGrid)
+
+Admin login for managing alerts
+
+Export threats to CSV
+
+WebSocket or polling for real-time updates
+
+File-based logging or integration with Replit DB
+
+⚙️ Tech Stack Requirements
+Layer	Tool
+Backend API	Python (Flask / FastAPI)
+Frontend	HTML + CSS (Tailwind preferred)
+Storage	In-memory (for now), or Replit DB
+Alert Logic	Keyword-matching with Python
+Hosting	Replit, serverless compatible
