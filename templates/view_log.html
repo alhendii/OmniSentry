@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}View Threat Log #{{ threat.id }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('index') }}">Dashboard</a></li>
+                <li class="breadcrumb-item active">View Threat #{{ threat.id }}</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card bg-dark text-light shadow-sm mb-4">
+            <div class="card-header bg-danger">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-exclamation-triangle me-2"></i> Threat Details #{{ threat.id }}
+                    </h5>
+                    <a href="{{ url_for('index') }}" class="btn btn-outline-light btn-sm">
+                        <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <h6 class="text-secondary">Threat ID</h6>
+                            <p class="lead">#{{ threat.id }}</p>
+                        </div>
+                        <div class="mb-3">
+                            <h6 class="text-secondary">Detection Timestamp</h6>
+                            <p class="lead">{{ threat.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <h6 class="text-secondary">Detected Keywords</h6>
+                            <div>
+                                {% for keyword in threat.detected_keywords %}
+                                <span class="badge bg-danger me-1 mb-1">{{ keyword }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <h6 class="text-secondary">Severity</h6>
+                            <div class="badge bg-danger">High</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <hr class="my-4">
+                
+                <h5 class="mb-3"><i class="fas fa-file-alt me-2"></i> Raw Log Data</h5>
+                <div class="alert alert-dark">
+                    <pre class="mb-0"><code>{{ threat.raw_log }}</code></pre>
+                </div>
+                
+                <div class="alert alert-warning mt-4">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    <strong>Security Advisory:</strong> This log contains patterns that match known malicious activities. 
+                    Please review the log carefully and take appropriate action if needed.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

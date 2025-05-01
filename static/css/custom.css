@@ -1,0 +1,84 @@
+/* ThreatWatch Lite - Custom CSS */
+
+/* Threat row highlighting animation */
+@keyframes highlight {
+    0% { background-color: rgba(220, 53, 69, 0.25); }
+    100% { background-color: transparent; }
+}
+
+.new-threat {
+    animation: highlight 4s ease-out;
+}
+
+/* Log code styling */
+pre code {
+    display: block;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    background-color: #212529;
+    padding: 10px;
+    border-radius: 5px;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+/* Improved table styling */
+.table-responsive {
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+/* Custom badge for threat keywords */
+.badge {
+    font-size: 0.8rem;
+    font-weight: normal;
+    padding: 0.35em 0.65em;
+}
+
+/* Dashboard cards */
+.card {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.card-header {
+    font-weight: 600;
+}
+
+/* Navigation tweaks */
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.4rem;
+}
+
+/* Form customization */
+textarea.form-control {
+    font-family: monospace;
+    resize: vertical;
+}
+
+/* Footer positioning */
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    flex: 1;
+}
+
+footer {
+    margin-top: auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .card-title {
+        font-size: 1.2rem;
+    }
+    
+    .table th, .table td {
+        font-size: 0.9rem;
+    }
+}

@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card bg-dark text-light shadow-sm mb-4">
+            <div class="card-header bg-danger bg-opacity-25 d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="fas fa-shield-alt me-2"></i> Endpoint Threat Detection
+                </h5>
+                <span class="badge bg-danger" id="threat-count">
+                    {{ threats|length }} Detected Threats
+                </span>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h3 class="fw-bold mb-3">Submit Log for Analysis</h3>
+                        <form action="{{ url_for('upload_log') }}" method="POST">
+                            <div class="mb-3">
+                                <label for="log_data" class="form-label">Log Data</label>
+                                <textarea class="form-control" id="log_data" name="log_data" rows="6" 
+                                    placeholder="Paste log data here for threat analysis..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-search me-2"></i> Scan for Threats
+                            </button>
+                        </form>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card bg-dark border border-secondary">
+                            <div class="card-header">Quick Stats</div>
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Total Threats:</span>
+                                    <span class="badge bg-danger">{{ threats|length }}</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Status:</span>
+                                    <span class="badge bg-success">Active</span>
+                                </div>
+                                <hr>
+                                <div class="alert alert-info mb-0">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    Scanning for {{ known_threat_count|default(30) }} known threats
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card bg-dark text-light shadow-sm">
+            <div class="card-header bg-danger bg-opacity-25">
+                <h5 class="mb-0">
+                    <i class="fas fa-exclamation-triangle me-2"></i> Detected Threats
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if threats %}
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Timestamp</th>
+                                <th>Detected Keywords</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for threat in threats %}
+                            <tr class="threat-row {% if loop.index0 < 3 %}new-threat{% endif %}">
+                                <td>#{{ threat.id }}</td>
+                                <td>{{ threat.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                                <td>
+                                    {% for keyword in threat.detected_keywords %}
+                                    <span class="badge bg-danger me-1">{{ keyword }}</span>
+                                    {% endfor %}
+                                </td>
+                                <td>
+                                    <a href="{{ url_for('view_log', threat_id=threat.id) }}" class="btn btn-sm btn-info">
+                                        <i class="fas fa-eye"></i> View Full Log
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    No threats detected yet. Upload log files to scan for potential threats.
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card bg-dark text-light shadow-sm">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-info-circle me-2"></i> API Endpoints
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-dark">
+                        <thead>
+                            <tr>
+                                <th>Endpoint</th>
+                                <th>Method</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>/upload</code></td>
+                                <td><span class="badge bg-primary">POST</span></td>
+                                <td>Upload log data in JSON format <code>{"log": "log data here"}</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>/api/threats</code></td>
+                                <td><span class="badge bg-success">GET</span></td>
+                                <td>Retrieve all detected threats</td>
+                            </tr>
+                            <tr>
+                                <td><code>/api/threat/:id</code></td>
+                                <td><span class="badge bg-success">GET</span></td>
+                                <td>View detailed information about a specific threat</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Highlight new threats automatically on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        // The CSS will handle the animation
+    });
+</script>
+{% endblock %}
