@@ -17,12 +17,12 @@
 <div class="row">
     <div class="col-12">
         <div class="card bg-dark text-light shadow-sm mb-4">
-            <div class="card-header {% if threat.threat_level == 'High' %}bg-danger{% elif threat.threat_level == 'Medium' %}bg-warning bg-opacity-75{% else %}bg-info bg-opacity-75{% endif %}">
+            <div class="card-header {% if threat.threat_level == 'High' %}border-bottom border-danger{% elif threat.threat_level == 'Medium' %}border-bottom border-warning{% else %}border-bottom border-info{% endif %}">
                 <div class="d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">
                         <i class="fas fa-exclamation-triangle me-2"></i> 
                         Threat Details #{{ threat.id }} 
-                        <span class="badge {% if threat.threat_level == 'High' %}bg-danger{% elif threat.threat_level == 'Medium' %}bg-warning text-dark{% else %}bg-info{% endif %} ms-2">
+                        <span class="badge {% if threat.threat_level == 'High' %}badge-high{% elif threat.threat_level == 'Medium' %}badge-medium{% else %}badge-low{% endif %} ms-2">
                             {{ threat.threat_level }} Severity
                         </span>
                     </h5>
@@ -65,7 +65,7 @@
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <h6 class="text-secondary">Threat Level</h6>
-                                            <div class="badge {% if threat.threat_level == 'High' %}bg-danger{% elif threat.threat_level == 'Medium' %}bg-warning text-dark{% else %}bg-info{% endif %} fs-6">
+                                            <div class="badge {% if threat.threat_level == 'High' %}badge-high{% elif threat.threat_level == 'Medium' %}badge-medium{% else %}badge-low{% endif %} fs-6">
                                                 {{ threat.threat_level }}
                                             </div>
                                         </div>
@@ -90,7 +90,7 @@
                                         <div class="mb-3">
                                             {% if threat.get_threat_categories() %}
                                                 {% for category in threat.get_threat_categories() %}
-                                                <span class="badge bg-secondary me-2 mb-1">{{ category|replace('_', ' ')|title }}</span>
+                                                <span class="badge category-badge me-2 mb-1">{{ category|replace('_', ' ')|title }}</span>
                                                 {% endfor %}
                                             {% else %}
                                                 <span class="text-muted">No specific categories identified</span>

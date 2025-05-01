@@ -186,17 +186,17 @@
                                 <td>{{ threat.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
                                 <td>
                                     {% if threat.threat_level == 'High' %}
-                                    <span class="badge bg-danger">High</span>
+                                    <span class="badge badge-high">High</span>
                                     {% elif threat.threat_level == 'Medium' %}
-                                    <span class="badge bg-warning text-dark">Medium</span>
+                                    <span class="badge badge-medium">Medium</span>
                                     {% else %}
-                                    <span class="badge bg-info">Low</span>
+                                    <span class="badge badge-low">Low</span>
                                     {% endif %}
                                 </td>
                                 <td>
                                     {% if threat.get_threat_categories() %}
                                         {% for category in threat.get_threat_categories() %}
-                                        <span class="badge bg-dark text-light border border-info me-1 mb-1">{{ category|replace('_', ' ')|title }}</span>
+                                        <span class="badge category-badge me-1 mb-1">{{ category|replace('_', ' ')|title }}</span>
                                         {% endfor %}
                                     {% else %}
                                         <small class="text-muted">Uncategorized</small>
