@@ -57,11 +57,11 @@ class ThreatWatchDocumentation:
             "ThreatWatch Lite is a cybersecurity dashboard focused on endpoint threat detection. It provides a streamlined, minimalist interface for monitoring and analyzing security threats detected in system logs.",
             "",
             "Key Features:",
-            "• NLP-based threat detection using pattern matching and keyword analysis",
-            "• Real-time threat scoring and categorization",
-            "• Support for manual log uploads and simulated agent feeds",
-            "• Detailed threat analysis with remediation suggestions",
-            "• API endpoints for integration with other security tools",
+            "- NLP-based threat detection using pattern matching and keyword analysis",
+            "- Real-time threat scoring and categorization",
+            "- Support for manual log uploads and simulated agent feeds",
+            "- Detailed threat analysis with remediation suggestions",
+            "- API endpoints for integration with other security tools",
             "",
             "This application focuses on a lightweight, pattern-matching approach to threat detection rather than using external AI services, making it suitable for environments with limited connectivity or privacy requirements."
         ]
@@ -98,15 +98,15 @@ class ThreatWatchDocumentation:
         self.pdf.set_font("Arial", "", 12)
         interface_elements = [
             "Dashboard Components:",
-            "• Threat Table: Displays all detected threats with severity, categories, and detected keywords",
-            "• Upload Panel: Allows users to submit log files for analysis or paste raw log content",
-            "• Quick Filters: Enables filtering by threat level, keywords, or categories",
-            "• API Endpoints: Documentation for integrating with the system programmatically",
+            "- Threat Table: Displays all detected threats with severity, categories, and detected keywords",
+            "- Upload Panel: Allows users to submit log files for analysis or paste raw log content",
+            "- Quick Filters: Enables filtering by threat level, keywords, or categories",
+            "- API Endpoints: Documentation for integrating with the system programmatically",
             "",
             "Color Coding:",
-            "• Red: High severity threats that require immediate attention",
-            "• Yellow: Medium severity threats that should be investigated",
-            "• Green: Low severity threats that are less urgent"
+            "- Red: High severity threats that require immediate attention",
+            "- Yellow: Medium severity threats that should be investigated",
+            "- Green: Low severity threats that are less urgent"
         ]
         
         for element in interface_elements:
@@ -134,14 +134,14 @@ class ThreatWatchDocumentation:
         self.pdf.set_font("Arial", "", 12)
         upload_details = [
             "Upload Methods:",
-            "• File Upload: Accepts .log and .txt files containing system or application logs",
-            "• Text Input: Allows pasting raw log content directly into the text area",
-            "• API Submission: Logs can be submitted programmatically via the /upload endpoint",
+            "- File Upload: Accepts .log and .txt files containing system or application logs",
+            "- Text Input: Allows pasting raw log content directly into the text area",
+            "- API Submission: Logs can be submitted programmatically via the /upload endpoint",
             "",
             "Supported Sources:",
-            "• Manual uploads from security analysts",
-            "• Simulated agent feeds (for testing/demonstration)",
-            "• Potential integration with real endpoint agents"
+            "- Manual uploads from security analysts",
+            "- Simulated agent feeds (for testing/demonstration)",
+            "- Potential integration with real endpoint agents"
         ]
         
         for detail in upload_details:
@@ -172,10 +172,10 @@ class ThreatWatchDocumentation:
             "5. Categorization: Threats are categorized into types (e.g., command_execution, credential_theft)",
             "",
             "NLP Techniques Used:",
-            "• Keyword frequency analysis",
-            "• Pattern recognition for command structures",
-            "• Contextual indicators (unusual time patterns, repeated failures)",
-            "• Correlation between multiple suspicious activities"
+            "- Keyword frequency analysis",
+            "- Pattern recognition for command structures",
+            "- Contextual indicators (unusual time patterns, repeated failures)",
+            "- Correlation between multiple suspicious activities"
         ]
         
         for detail in detection_details:
@@ -202,12 +202,12 @@ class ThreatWatchDocumentation:
         # Explain components of the detailed view
         detail_components = [
             "Detailed View Components:",
-            "• Threat Summary: ID, timestamp, source, and severity level",
-            "• Detected Keywords: Specific suspicious patterns found in the log",
-            "• Threat Categories: Types of security threats identified",
-            "• Raw Log Display: Complete log entry with highlighted suspicious elements",
-            "• Security Advisory: Potential impact and recommended actions",
-            "• MITRE ATT&CK Mapping: Correlation with known attack techniques"
+            "- Threat Summary: ID, timestamp, source, and severity level",
+            "- Detected Keywords: Specific suspicious patterns found in the log",
+            "- Threat Categories: Types of security threats identified",
+            "- Raw Log Display: Complete log entry with highlighted suspicious elements",
+            "- Security Advisory: Potential impact and recommended actions",
+            "- MITRE ATT&CK Mapping: Correlation with known attack techniques"
         ]
         
         for component in detail_components:
@@ -231,20 +231,20 @@ class ThreatWatchDocumentation:
         # Explain filtering options
         filter_options = [
             "Filtering Capabilities:",
-            "• By Severity Level: Filter to show only High, Medium, or Low threats",
-            "• By Keyword: Search for specific suspicious commands or patterns",
-            "• By Category: Filter by threat categories (e.g., 'command_execution', 'credential_theft')",
-            "• Time-based: Focus on recent threats (most recent shown at the top)",
+            "- By Severity Level: Filter to show only High, Medium, or Low threats",
+            "- By Keyword: Search for specific suspicious commands or patterns",
+            "- By Category: Filter by threat categories (e.g., 'command_execution', 'credential_theft')",
+            "- Time-based: Focus on recent threats (most recent shown at the top)",
             "",
             "Categorization System:",
             "ThreatWatch Lite automatically categorizes threats into groups that help analysts understand the nature of potential attacks:",
             "",
-            "• command_execution: Suspicious command or script execution",
-            "• credential_theft: Attempts to access or steal authentication credentials",
-            "• remote_access: Unusual remote access attempts or patterns",
-            "• privilege_escalation: Attempts to gain higher privileges",
-            "• data_exfiltration: Potential data theft or unauthorized transfers",
-            "• persistence: Actions that maintain presence on compromised systems"
+            "- command_execution: Suspicious command or script execution",
+            "- credential_theft: Attempts to access or steal authentication credentials",
+            "- remote_access: Unusual remote access attempts or patterns",
+            "- privilege_escalation: Attempts to gain higher privileges",
+            "- data_exfiltration: Potential data theft or unauthorized transfers",
+            "- persistence: Actions that maintain presence on compromised systems"
         ]
         
         for option in filter_options:
@@ -313,29 +313,29 @@ class ThreatWatchDocumentation:
             "Component Architecture:",
             "",
             "1. Flask Web Application (main.py, app.py, routes.py)",
-            "   • Handles HTTP requests and routes",
-            "   • Manages sessions and user interface",
-            "   • Processes form submissions and API calls",
+            "   - Handles HTTP requests and routes",
+            "   - Manages sessions and user interface",
+            "   - Processes form submissions and API calls",
             "",
             "2. Database Layer (models.py)",
-            "   • SQLAlchemy ORM for database interactions",
-            "   • Threat model for storing detected threats",
-            "   • JSON serialization for API responses",
+            "   - SQLAlchemy ORM for database interactions",
+            "   - Threat model for storing detected threats",
+            "   - JSON serialization for API responses",
             "",
             "3. Threat Detection Engine (threat_detector.py)",
-            "   • Pattern matching and keyword detection",
-            "   • Threat scoring algorithm",
-            "   • Category mapping logic",
+            "   - Pattern matching and keyword detection",
+            "   - Threat scoring algorithm",
+            "   - Category mapping logic",
             "",
             "4. NLP Analysis Module (nlp_analyzer.py)",
-            "   • Text analysis for threat context",
-            "   • Indicator extraction from log content",
-            "   • Severity calculation based on patterns",
+            "   - Text analysis for threat context",
+            "   - Indicator extraction from log content",
+            "   - Severity calculation based on patterns",
             "",
             "5. Frontend (templates/, static/)",
-            "   • Responsive Bootstrap-based interface",
-            "   • Client-side filtering and sorting",
-            "   • Interactive threat visualization"
+            "   - Responsive Bootstrap-based interface",
+            "   - Client-side filtering and sorting",
+            "   - Interactive threat visualization"
         ]
         
         for line in architecture:

@@ -1,99 +1,120 @@
-
 from fpdf import FPDF
-import os
+from datetime import datetime
 
 class ThreatWatchDocs(FPDF):
     def header(self):
-        self.set_font('Arial', 'B', 15)
-        self.cell(0, 10, 'ThreatWatch Lite Documentation', 0, 1, 'C')
-        self.ln(10)
+        # Set header
+        if self.page_no() > 1:
+            self.set_font('Arial', 'I', 8)
+            self.cell(0, 10, 'ThreatWatch Lite Documentation', 0, 0, 'L')
+            self.cell(0, 10, f'Page {self.page_no()}', 0, 0, 'R')
+            self.ln(15)
 
 def generate_documentation():
+    # Create PDF object
     pdf = ThreatWatchDocs()
+    pdf.set_auto_page_break(auto=True, margin=15)
+    
+    # Title page
     pdf.add_page()
+    pdf.set_font('Arial', 'B', 24)
+    pdf.cell(0, 20, 'ThreatWatch Lite', ln=True, align='C')
+    pdf.ln(10)
     
-    # Title and Introduction
     pdf.set_font('Arial', 'B', 16)
-    pdf.cell(0, 10, 'ThreatWatch Lite', 0, 1, 'C')
+    pdf.cell(0, 10, 'Endpoint Threat Detection Dashboard', ln=True, align='C')
     pdf.ln(10)
     
     pdf.set_font('Arial', '', 12)
-    pdf.multi_cell(0, 10, "ThreatWatch Lite is a security monitoring dashboard designed for endpoint threat detection and analysis. The application provides real-time monitoring of security logs, intelligent threat detection, and detailed analysis of potential security incidents.")
+    pdf.cell(0, 10, f'Documentation generated on: {datetime.now().strftime("%Y-%m-%d")}', ln=True, align='C')
+    pdf.ln(20)
     
-    # Core Features
-    pdf.ln(10)
-    pdf.set_font('Arial', 'B', 14)
-    pdf.cell(0, 10, 'Core Features:', 0, 1)
+    # Description
+    pdf.set_font('Arial', 'I', 12)
+    pdf.multi_cell(0, 10, 'ThreatWatch Lite is a minimalist security dashboard designed for monitoring endpoint threats. It uses pattern matching and NLP-based analysis to detect potential security issues in log files.')
     
-    features = [
-        "Real-time Log Analysis - Monitors and analyzes security logs in real-time",
-        "NLP-powered Detection - Uses Natural Language Processing for threat detection",
-        "Threat Categorization - Automatically categorizes threats by severity",
-        "Interactive Dashboard - Provides clear security status overview",
-        "Detailed Logging - Maintains comprehensive threat logs",
-        "Smart Filtering - Filter threats by level and categories",
-        "RESTful API - Full API support for integration with other tools",
-        "Responsive Design - Mobile-friendly interface"
+    # Table of Contents
+    pdf.add_page()
+    pdf.set_font('Arial', 'B', 16)
+    pdf.cell(0, 10, 'Table of Contents', ln=True)
+    pdf.ln(5)
+    
+    # Content sections
+    sections = [
+        '1. Introduction',
+        '2. Dashboard Overview',
+        '3. Log Upload Functionality',
+        '4. Threat Analysis & Detection',
+        '5. Detailed Threat View',
+        '6. Filtering & Categorization',
+        '7. API Integration',
+        '8. Technical Architecture'
     ]
     
     pdf.set_font('Arial', '', 12)
-    for feature in features:
-        pdf.cell(0, 10, '• ' + feature, 0, 1)
+    for section in sections:
+        pdf.cell(0, 10, section, ln=True)
     
-    # Technical Stack
-    pdf.ln(10)
-    pdf.set_font('Arial', 'B', 14)
-    pdf.cell(0, 10, 'Technical Stack:', 0, 1)
-    
-    tech_stack = [
-        "Backend: Flask (Python)",
-        "Database: SQLAlchemy with PostgreSQL",
-        "Frontend: Bootstrap with custom CSS",
-        "NLP Analysis: Custom implementation",
-        "Authentication: Flask-Login",
-        "Deployment: Gunicorn WSGI server"
-    ]
+    # Introduction
+    pdf.add_page()
+    pdf.set_font('Arial', 'B', 16)
+    pdf.cell(0, 10, '1. Introduction', ln=True)
+    pdf.ln(5)
     
     pdf.set_font('Arial', '', 12)
-    for tech in tech_stack:
-        pdf.cell(0, 10, '• ' + tech, 0, 1)
+    intro_text = '''ThreatWatch Lite is a cybersecurity dashboard focused on endpoint threat detection. It provides a streamlined, minimalist interface for monitoring and analyzing security threats detected in system logs.
 
-    # API Endpoints
-    pdf.ln(10)
-    pdf.set_font('Arial', 'B', 14)
-    pdf.cell(0, 10, 'API Endpoints:', 0, 1)
+Key Features:
+- NLP-based threat detection using pattern matching and keyword analysis
+- Real-time threat scoring and categorization
+- Support for manual log uploads and simulated agent feeds
+- Detailed threat analysis with remediation suggestions
+- API endpoints for integration with other security tools
 
-    endpoints = [
-        ("/upload [POST] - Upload log data in JSON format"),
-        ("/api/threats [GET] - Retrieve all detected threats"),
-        ("/api/threat/:id [GET] - View specific threat details"),
-        ("/filter_threats [GET] - Filter threats by level/keyword")
-    ]
-
-    pdf.set_font('Arial', '', 12)
-    for endpoint in endpoints:
-        pdf.cell(0, 10, '• ' + endpoint, 0, 1)
-
-    # Security Features
-    pdf.ln(10)
-    pdf.set_font('Arial', 'B', 14)
-    pdf.cell(0, 10, 'Security Features:', 0, 1)
-
-    security = [
-        "Pattern-based threat detection",
-        "Threat scoring system",
-        "Real-time alerts",
-        "Log persistence and analysis",
-        "Configurable threat patterns",
-        "Secure API endpoints"
-    ]
-
-    pdf.set_font('Arial', '', 12)
-    for feature in security:
-        pdf.cell(0, 10, '• ' + feature, 0, 1)
+This application focuses on a lightweight, pattern-matching approach to threat detection rather than using external AI services, making it suitable for environments with limited connectivity or privacy requirements.'''
     
-    # Save the PDF
-    pdf.output('ThreatWatch_Documentation.pdf')
+    for line in intro_text.split('\n'):
+        pdf.multi_cell(0, 10, line)
+        if not line:
+            pdf.ln(5)
+    
+    # Additional sections would be added here following the same pattern
+    
+    # Dashboard Overview
+    pdf.add_page()
+    pdf.set_font('Arial', 'B', 16)
+    pdf.cell(0, 10, '2. Dashboard Overview', ln=True)
+    pdf.ln(5)
+    
+    pdf.set_font('Arial', '', 12)
+    dashboard_text = '''The main dashboard provides an at-a-glance view of all detected threats, organized by severity level (High, Medium, Low). The interface uses a minimalist design with contextual colors to highlight critical information.
 
-if __name__ == "__main__":
-    generate_documentation()
+Dashboard Components:
+- Threat Table: Displays all detected threats with severity, categories, and detected keywords
+- Upload Panel: Allows users to submit log files for analysis or paste raw log content
+- Quick Filters: Enables filtering by threat level, keywords, or categories
+- API Endpoints: Documentation for integrating with the system programmatically
+
+Color Coding:
+- Red: High severity threats that require immediate attention
+- Yellow: Medium severity threats that should be investigated
+- Green: Low severity threats that are less urgent'''
+    
+    for line in dashboard_text.split('\n'):
+        pdf.multi_cell(0, 10, line)
+        if not line:
+            pdf.ln(5)
+    
+    # Output the PDF
+    pdf_path = 'ThreatWatch_Lite_Documentation.pdf'
+    pdf.output(pdf_path)
+    print(f'Documentation generated: {pdf_path}')
+    return pdf_path
+
+if __name__ == '__main__':
+    try:
+        print("Generating ThreatWatch Lite documentation...")
+        pdf_path = generate_documentation()
+        print(f"Documentation saved to: {pdf_path}")
+    except Exception as e:
+        print(f"Error generating documentation: {e}")
