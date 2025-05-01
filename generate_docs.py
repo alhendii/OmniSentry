@@ -31,7 +31,9 @@ def generate_documentation():
         "Threat Categorization - Automatically categorizes threats by severity",
         "Interactive Dashboard - Provides clear security status overview",
         "Detailed Logging - Maintains comprehensive threat logs",
-        "Smart Filtering - Filter threats by level and categories"
+        "Smart Filtering - Filter threats by level and categories",
+        "RESTful API - Full API support for integration with other tools",
+        "Responsive Design - Mobile-friendly interface"
     ]
     
     pdf.set_font('Arial', '', 12)
@@ -55,6 +57,40 @@ def generate_documentation():
     pdf.set_font('Arial', '', 12)
     for tech in tech_stack:
         pdf.cell(0, 10, '• ' + tech, 0, 1)
+
+    # API Endpoints
+    pdf.ln(10)
+    pdf.set_font('Arial', 'B', 14)
+    pdf.cell(0, 10, 'API Endpoints:', 0, 1)
+
+    endpoints = [
+        ("/upload [POST] - Upload log data in JSON format"),
+        ("/api/threats [GET] - Retrieve all detected threats"),
+        ("/api/threat/:id [GET] - View specific threat details"),
+        ("/filter_threats [GET] - Filter threats by level/keyword")
+    ]
+
+    pdf.set_font('Arial', '', 12)
+    for endpoint in endpoints:
+        pdf.cell(0, 10, '• ' + endpoint, 0, 1)
+
+    # Security Features
+    pdf.ln(10)
+    pdf.set_font('Arial', 'B', 14)
+    pdf.cell(0, 10, 'Security Features:', 0, 1)
+
+    security = [
+        "Pattern-based threat detection",
+        "Threat scoring system",
+        "Real-time alerts",
+        "Log persistence and analysis",
+        "Configurable threat patterns",
+        "Secure API endpoints"
+    ]
+
+    pdf.set_font('Arial', '', 12)
+    for feature in security:
+        pdf.cell(0, 10, '• ' + feature, 0, 1)
     
     # Save the PDF
     pdf.output('ThreatWatch_Documentation.pdf')
