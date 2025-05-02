@@ -37,7 +37,3 @@ OmniSentry is a minimalist cybersecurity dashboard designed for monitoring and d
 3. Start the application with `python main.py`
 4. Access the dashboard at `http://localhost:5000`
 5. Upload log files or paste log data to begin threat analysis
-
-## License
-
-[Your preferred license here]
