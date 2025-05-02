@@ -1,4 +1,4 @@
-// ThreatWatch Lite - Main JavaScript
+// OmniSentry - Main JavaScript
 
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize Bootstrap tooltips
